@@ -3,7 +3,7 @@ import { formatDate } from "../utils/format-data.js";
 import { formatTemp } from "../utils/format-data.js";
 import { weatherConditionsCodes } from "./constants.js";
 import { getLatLon } from "./geolocation.js";
-
+import { getCurrentWeather } from "./services/weather.js";
 //weatherConditionsCodes[ ]
 
 function setCurrentDate($el) {
@@ -69,7 +69,8 @@ function configCurrentWeather(weather) {
 
 export default async function currentWeather() {
   try {
-    const { lat, lon } = await getLatLon();
+    const { lat, lon, isError } = await getLatLon();
+    if (isError) return console.log("Error geolocating")
     console.log(lat, lon)
 
   } catch (err) {
@@ -82,6 +83,8 @@ export default async function currentWeather() {
   // .catch((message)=> {
   //   console.log(message)
   // })
-  // configCurrentWeather(weather);
+  const { isError: currentWeatherError, data } = await getCurrentWeather();
+  if (currentWeatherError) return console.log("There was an error getting the current weather")
+  configCurrentWeather(weather);
    console.log(weather);
 }
