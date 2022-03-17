@@ -1,4 +1,4 @@
-import weather from "../data/current-weather.js";
+//import weather from "../data/current-weather.js";
 import { formatDate } from "../utils/format-data.js";
 import { formatTemp } from "../utils/format-data.js";
 import { weatherConditionsCodes } from "./constants.js";
@@ -68,23 +68,24 @@ function configCurrentWeather(weather) {
 }
 
 export default async function currentWeather() {
-  try {
-    const { lat, lon, isError } = await getLatLon();
-    if (isError) return console.log("Error geolocating")
-    console.log(lat, lon)
-
-  } catch (err) {
-    console.log(err.message)
-  }
+  // GEO // API - weather // Config
+  // console.log('esto pasa ANTES de getCurrentPosition')
+  const { lat, lon, isError } = await getLatLon();
+  if (isError) return console.log("A ocurrido un error ubicandote");
+  // console.log(lat, lon)
   // getCurrentPosition()
-  // .then((data)=> {
-  //   console.log(data)
+  // .then((data) => {
+  //   console.log('hemos triunfado', data)
+
   // })
-  // .catch((message)=> {
+  // .catch((message) => {
   //   console.log(message)
   // })
-  const { isError: currentWeatherError, data } = await getCurrentWeather();
-  if (currentWeatherError) return console.log("There was an error getting the current weather")
+  // console.log('esto pasa DESPUES de getCurrentPosition')
+  const { isError: currentWeatherError, data: weather } =
+    await getCurrentWeather(lat, lon);
+  if (currentWeatherError)
+    return console.log("oh! a ocurrido un error trayendo lo datos del clima");
   configCurrentWeather(weather);
-   console.log(weather);
+  // console.log(weather)
 }
